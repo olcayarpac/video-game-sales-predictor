@@ -15,7 +15,7 @@ def isNumericalString(s):
     
 data = pd.read_csv('video-game-sales-data.csv')
 
-'''
+
 # visualize critic score point and global sales relationship
 fig = plt.figure(dpi=1200)
 plt.scatter(data['Critic_Score'], data['Global_Sales'], s=10)
@@ -174,7 +174,7 @@ top100SumPublisher.plot(kind='pie', y = 'Global_Sales', ax=ax1, autopct='%1.1f%%
         startangle=90, shadow=False, labels=top100SumPublisher['Publisher'], legend = False, 
         title='TOP 100 Selled Game, Sale Distributions and Publisher Company', fontsize=10)
 plt.show()
-'''
+
 
 # in the dataset, each row specified with a platform, so one game that has multiple
 # platform oppurtunity, exists in dataset multiple times. To visualize most selled
@@ -208,7 +208,7 @@ plt.title('Total Sales in Global')
 plt.show() 
 
 
-#data.to_csv('video-game-sales-data.csv', index=False)
+data.to_csv('video-game-sales-data.csv', index=False)
 
 
 
