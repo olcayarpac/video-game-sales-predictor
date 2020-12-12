@@ -6,9 +6,8 @@ import seaborn as sns
 from scipy import stats
 from scipy.stats import norm, skew
 
-
 data = pd.read_csv('video-game-sales-data.csv')
-
+    
 data.shape
 corr = data.corr(method='pearson')
 sns.heatmap(data.corr(), annot=True, linewidths=-1)
@@ -29,20 +28,40 @@ data.loc[data['Platform'].isin((data['Platform'].value_counts()
 # turn Genre column into dummy variable
 
 dummyGenre = pd.get_dummies(data['Genre'])
+dummyPlatform = pd.get_dummies(data['Platform'])
 data = pd.concat([data,dummyGenre], axis=1)
-data.drop('Genre', axis=1, inplace=True)
+data = pd.concat([data, dummyPlatform], axis=1)
+data.drop(['Genre', 'Platform'], axis=1, inplace=True)
+
 
 cols = data.columns.tolist()
-cols = cols[:3] + cols[4:] + cols[3:4]
+cols = cols[:2] + cols[3:] + cols[2:3]
 data = data[cols]
 data.head(5)
 
+data = data.dropna()
+
+from sklearn.preprocessing import LabelEncoder
+lblEncoderRating = LabelEncoder()
+lblEncoderPublisher = LabelEncoder()
 
 
-# we will be predicting the Global Sales, so for independent variables we don't
-# take EU, NA, JPN and OTHER Sales
+data['Rating'] = lblEncoderRating.fit_transform(data['Rating'].astype(str))
+data['Publisher'] = lblEncoderPublisher.fit_transform(data['Publisher'].astype(str))
 
-x = data.iloc[:, :-1].values
-y = data.iloc[:,-1:].values
 
-data2 = data.iloc[:5,:]
+
+from sklearn.model_selection import train_test_split
+
+x = data.loc[:, data.columns != 'Global_Sales']
+y = data.loc[:, data.columns == 'Global_Sales']
+
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.2)
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+
+
+
